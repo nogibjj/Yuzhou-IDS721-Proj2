@@ -1,4 +1,5 @@
 # rust-new-project-template
+## Dependencies for Rocket rust project
 1. Install rust
 ```
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
