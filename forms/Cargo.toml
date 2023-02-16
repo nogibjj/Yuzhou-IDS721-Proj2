@@ -1,0 +1,13 @@
+[package]
+name = "forms"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rocket = { path = "rocket-v0.5rc/core/lib"}
+rust-bert = "0.20.0"
+anyhow = "1.0.40"
+
+[dependencies.rocket_dyn_templates]
+path = "rocket-v0.5rc/contrib/dyn_templates"
+features = ["tera"]

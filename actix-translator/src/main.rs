@@ -68,11 +68,16 @@ enum Commands {
 
 use std::io::{self, BufRead};
 
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
+}
+
 fn main() -> io::Result<()> {
     let mut lines = io::stdin().lock().lines();
     let mut user_input = Vec::<String>::new();
 
-    println!("Enter a text you want to translate into Spanish. Press enter on an empty line to stop.");
+    println!("Enter the text you want to translate into Spanish. Press enter on an empty line to stop.");
+    println!("Your text:");
     while let Some(line) = lines.next() {
         let last_input = line.unwrap();
 
@@ -85,7 +90,12 @@ fn main() -> io::Result<()> {
         user_input.push(last_input);
     }
 
-    translate::translate_text(user_input);
+    let translations = translate::translate_text(user_input).unwrap();
+
+    println!("Translation in main: ");
+    for i in translations{
+        println!("{}", i);
+    }
 
     // the lock is released after it goes out of scope
     Ok(())

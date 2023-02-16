@@ -14,23 +14,33 @@ fn print_type_of<T>(_: &T) {
 }
 
 //build a function that translates a given text
-pub fn translate_text(text: Vec<String>) -> anyhow::Result<()> {
+pub fn translate_text(text: Vec<String>) -> anyhow::Result<(Vec<String>)> {
     
     let model = TranslationModelBuilder::new()
         .with_source_languages(vec![Language::English])
         .with_target_languages(vec![Language::Spanish])
         .create_model()?;
-    println!("Translation: ");
+
+    let mut answer = Vec::<String>::new();
 
     for sentence in text{
         //pass in the text to the model
         let output = model.translate(&[sentence], None, Language::Spanish)?;
         let mut counter = 0;
         for result in output {
-            println!("{}", result);
+            let string = String::from(result.clone());
+            answer.push(string);
+            // print_type_of(&(result.to_string()));
+            // println!("{}", result);
         }
     }
-    Ok(())
+
+    // println!("In answer: ");
+    // for i in answer{
+    //     println!("{}", i);
+    // }
+
+    Ok((answer))
 }
 
 pub fn dialogue(text: String) -> String {
