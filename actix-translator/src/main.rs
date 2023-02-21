@@ -1,102 +1,70 @@
-/*An actix Microservice for Simple Calculator that has multiple routes:
-A. / that turns a hello world message
-B. /calculate/{string} that calculates the result of the string
-*/
+#[macro_use] extern crate rocket;
 
-// use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-// use serde::{Serialize};
+use rocket::time::Date;
+use rocket::http::{Status, ContentType};
+use rocket::form::{Form, Contextual, FromForm, FromFormField, Context};
+use serde::Serialize;
+use serde::Deserialize;
+use rocket::fs::{FileServer, TempFile, relative};
+use rust_bert::pipelines::translation::{
+    Language, TranslationConfig, TranslationModel, TranslationModelBuilder,
+};
+use rocket_dyn_templates::Template;
 
-// //create a function that returns hello world
-// #[get("/")]
-// async fn hello() -> impl Responder {
-//     HttpResponse::Ok().body("Hello World! Translators are fun!")
-// }
-
-// //create a function that returns the result of the translation
-// #[get("/dialogue/{input}")]
-// async fn calculate(input: web::Path<String>) -> impl Responder {
-//     println!("input: {}", input);
-//     let result = translate::translate_text(input.to_string());
-//     HttpResponse::Ok().body(result.to_string())
-// }
-
-// #[actix_web::main]
-// async fn main() -> std::io::Result<()> {
-//     HttpServer::new(|| App::new().service(hello).service(calculate))
-//         .bind("0.0.0.0:8080")?
-//         .run()
-//         .await
-// }
-
-use clap::Parser;
-
-#[derive(Parser)]
-#[clap(
-    version = "1.0",
-    author = "yuzhou",
-    about = "A Hugging Face Translation Tool in Rust"
-)]
-struct Cli {
-    #[clap(subcommand)]
-    command: Option<Commands>,
+#[derive(Serialize)]
+pub struct GenericResponse {
+    pub status: String,
+    pub translation: String,
 }
 
-#[derive(Parser)]
-enum Commands {
-    #[clap(version = "1.0", author = "yuzhou")]
-    Translate {
-        #[clap(short, long)]
-        text: String,
-    }
+#[derive(Debug, FromForm)]
+#[allow(dead_code)]
+struct Submit<'v> {
+    #[field(validate = len(1..=250))]
+    r#submission: &'v str,
 }
-// create main function that uses lib.rs
-// fn main() -> anyhow::Result<()> {
-//     let mut user_input = String::new();
-//     let stdin = io::stdin("Ask your Question: "); // We get `Stdin` here.
-//     stdin.read_line(&mut user_input);
 
-//     println!("input {} ", user_input);
-//         Some(Commands::Translate { text }) => {
-//             println!("Response: {}", translate::translate_text(text));
-//         }
-//         None => {
-//             println!("No command given");
-//         }
-//     }
-//     Ok(())
-// }
-
-use std::io::{self, BufRead};
-
+#[get("/")]
+fn index() -> Template {
+    Template::render("index", &Context::default())
+}
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
 }
+// NOTE: We use `Contextual` here because we want to collect all submitted form
+// fields to re-render forms with submitted values on error. If you have no such
+// need, do not use `Contextual`. Use the equivalent of `Form<Submit<'_>>`.
+#[post("/", data = "<form>")]
+async fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template) {
+    let translation_model = forms::init_translation_model();
 
-fn main() -> io::Result<()> {
-    let mut lines = io::stdin().lock().lines();
-    let mut user_input = Vec::<String>::new();
+    let template = match form.value {
+        Some(ref submission) => {
+            println!("submission: {:#?}", submission.submission);
 
-    println!("Enter the text you want to translate into Spanish. Press enter on an empty line to stop.");
-    println!("Your text:");
-    while let Some(line) = lines.next() {
-        let last_input = line.unwrap();
+            let translations = translation_model.translate(&[submission.submission], None, Language::Spanish).unwrap();
+            let full_translations = translations.join("\n");
+            
+            let response_json = &GenericResponse {
+                status: "success".to_string(),
+                translation: full_translations.to_string(),
+            };
+            Template::render("success", response_json)
 
-        // stop reading
-        if last_input.len() == 0 {
-            break;
+            
+            // let response = dialogue(String::from(submission.submission));
+            // Template::render("success", &response)
         }
+        None => Template::render("index", &form.context),
+    };
 
-        // store user input
-        user_input.push(last_input);
-    }
+    (form.context.status(), template)
+}
 
-    let translations = translate::translate_text(user_input).unwrap();
-
-    println!("Translation in main: ");
-    for i in translations{
-        println!("{}", i);
-    }
-
-    // the lock is released after it goes out of scope
-    Ok(())
+#[launch]
+fn rocket() -> _ {
+    rocket::build()
+        .mount("/", routes![index, submit])
+        .attach(Template::fairing())
+        .mount("/", FileServer::from(relative!("/static")))
 }

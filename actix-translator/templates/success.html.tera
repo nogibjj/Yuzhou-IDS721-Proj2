@@ -20,9 +20,10 @@
       <h3>Submission Data</h3>
 
       <ul>
-          {% for sentence in values %}
-              <li>{{ sentence }}</li>
-          {% endfor %}
+        {% if translation %}
+          <h3>translation: </h3>
+          <div class="translation">{{ translation }}</div>
+        {% endif %}
       </ul>
 
       <a href="/">&lt; Submit Another</a>
