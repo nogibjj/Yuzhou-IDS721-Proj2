@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rocket = { path = "rocket-v0.5rc/core/lib"}
-rocket_healthz = "0.2.0"
+rocket = { path = "rocket-v0.5rc/core/lib", features = ["json"]}
+# rocket_healthz = "0.2.0"
 rust-bert = "0.20.0"
 anyhow = "1.0.40"
 exitfailure = "0.5.1"

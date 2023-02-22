@@ -20,12 +20,12 @@
       <h3>Submission Data</h3>
 
       <ul>
-        {% if translation %}
+        {% if message %}
           <h3>translation: </h3>
-          <div class="translation">{{ translation }}</div>
+          <div class="message">{{ message }}</div>
         {% endif %}
       </ul>
 
-      <a href="/">&lt; Submit Another</a>
+      <a href="/translate">&lt; Submit Another</a>
   </body>
 </html>
