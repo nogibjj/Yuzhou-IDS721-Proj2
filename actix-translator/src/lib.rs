@@ -6,26 +6,21 @@ Formula for using Github copilot:
 3. Lint your code with cargo clippy
 
 */
-use std::sync::Once;
+// use std::sync::Once;
 use std::thread;
 
 use exitfailure::ExitFailure;
-use rust_bert::bart::{
-    BartConfigResources, BartMergesResources, BartModelResources, BartVocabResources,
-};
-use rust_bert::pipelines::common::ModelType;
 use rust_bert::pipelines::translation::{
-    Language, TranslationConfig, TranslationModel, TranslationModelBuilder,
+    Language, TranslationModel, TranslationModelBuilder,
 };
-use tch::Device;
 
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
+// fn print_type_of<T>(_: &T) {
+//     println!("{}", std::any::type_name::<T>())
+// }
 
-static mut TRANSLATION_MODEL: Option<TranslationModel> = None;
+// static mut TRANSLATION_MODEL: Option<TranslationModel> = None;
 
-static INIT_MODEL: Once = Once::new();
+// static INIT_MODEL: Once = Once::new();
 
 //build a function that translates a given text
 pub fn init_translation_model() -> TranslationModel {

@@ -1,14 +1,10 @@
 #[macro_use] extern crate rocket;
 mod lib;
-use rocket::time::Date;
-use rocket::http::{Status, ContentType};
-use rocket::form::{Form, Contextual, FromForm, FromFormField, Context};
+use rocket::http::Status;
+use rocket::form::{Form, Contextual, FromForm, Context};
 use serde::Serialize;
-use serde::Deserialize;
-use rocket::fs::{FileServer, TempFile, relative};
-use rust_bert::pipelines::translation::{
-    Language, TranslationConfig, TranslationModel, TranslationModelBuilder,
-};
+use rocket::fs::{FileServer, relative};
+use rust_bert::pipelines::translation::Language;
 use rocket_dyn_templates::Template;
 
 #[derive(Serialize)]
@@ -24,19 +20,19 @@ struct Submit<'v> {
     r#submission: &'v str,
 }
 
+rocket_healthz::healthz!();
+
 #[get("/")]
-fn index() -> Template {
+async fn index() -> Template {
     Template::render("index", &Context::default())
 }
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
+
 // NOTE: We use `Contextual` here because we want to collect all submitted form
 // fields to re-render forms with submitted values on error. If you have no such
 // need, do not use `Contextual`. Use the equivalent of `Form<Submit<'_>>`.
 #[post("/", data = "<form>")]
 async fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template) {
-    let translation_model = libs::init_translation_model();
+    let translation_model = lib::init_translation_model();
 
     let template = match form.value {
         Some(ref submission) => {
@@ -64,7 +60,7 @@ async fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![index, submit])
+        .mount("/", routes![index, submit, healthz])
         .attach(Template::fairing())
         .mount("/", FileServer::from(relative!("/static")))
 }
