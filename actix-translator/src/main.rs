@@ -1,5 +1,5 @@
 #[macro_use] extern crate rocket;
-
+mod lib;
 use rocket::time::Date;
 use rocket::http::{Status, ContentType};
 use rocket::form::{Form, Contextual, FromForm, FromFormField, Context};
@@ -36,7 +36,7 @@ fn print_type_of<T>(_: &T) {
 // need, do not use `Contextual`. Use the equivalent of `Form<Submit<'_>>`.
 #[post("/", data = "<form>")]
 async fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template) {
-    let translation_model = forms::init_translation_model();
+    let translation_model = libs::init_translation_model();
 
     let template = match form.value {
         Some(ref submission) => {
