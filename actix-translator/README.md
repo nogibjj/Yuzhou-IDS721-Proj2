@@ -1,18 +1,18 @@
 # Mini Project week4: Actix containerized calculator
-Deployed on: https://eeixxfhm34.us-east-1.awsapprunner.com/
-
-Usage: https://eeixxfhm34.us-east-1.awsapprunner.com/calculate/1+(2*3)
+Deployed on: https://eeixxfhm34.us-east-1.awsapprunner.com/translate
 
 ## Containerization
-1. In [lib.rs](https://github.com/nogibjj/Yuzhou-rust-mini-projects/blob/main/week4-actix/src/lib.rs), implement calculator logics 
-2. In [main.rs](https://github.com/nogibjj/Yuzhou-rust-mini-projects/blob/main/week4-actix/src/main.rs), implement APIs with actix_web
-3. In [Dockerfile](https://github.com/nogibjj/Yuzhou-rust-mini-projects/blob/main/week4-actix/Dockerfile), configure containerization
-4. Build docker with ` docker build -t calculator .`
-5. Test docker containerized app with `docker run -p 8080:8080 calculator`
+1. In [lib.rs](https://github.com/nogibjj/Yuzhou-IDS721-Proj2/blob/main/actix-translator/src/lib.rs), implement calculator logics 
+2. In [main.rs](https://github.com/nogibjj/Yuzhou-IDS721-Proj2/blob/main/actix-translator/src/main.rs), implement APIs with actix_web
+3. In [Dockerfile](https://github.com/nogibjj/Yuzhou-IDS721-Proj2/blob/main/actix-translator/Dockerfile), configure containerization
+4. Build docker with `docker build -t rust-bert-rocket .`
+5. Test docker containerized app with `docker run -p 8080:8080 rust-bert-rocket`
 
 ## Deployment
-1. In AWS Elastic Container Registry (ECR), create new container repository `actix`
-2. Follow push commands inside newly created ECR repo, push our local docker image to `actix`
+1. In AWS Elastic Container Registry (ECR), create new container repository `actix-translator`
+2. Build docker for our own app: `make build`
+3. Check docker can run: `make rundocker`
+4. Follow push commands inside newly created ECR repo, push our local docker image to `actix-translator`
 
     i. Configure identification and authentication by running
         ```
@@ -20,12 +20,12 @@ Usage: https://eeixxfhm34.us-east-1.awsapprunner.com/calculate/1+(2*3)
         ```
         inside AWS Cloud9
         
-    ii. Build image of APP
+    ii. Build image of actix-translator
         ```
-        docker build -t actix .
+        docker build -t actix-translator .
         ```
         
-    iii. Tag local repo image `actix` with remote repo image `773627151292.dkr.ecr.us-east-1.amazonaws.com/actix:latest`
+    iii. Tag local repo image `actix-translator` with remote repo image
         ```
         docker tag actix:latest 773627151292.dkr.ecr.us-east-1.amazonaws.com/actix:latest
         ```
@@ -39,7 +39,7 @@ Usage: https://eeixxfhm34.us-east-1.awsapprunner.com/calculate/1+(2*3)
 
     i. Click `Create Service`
     
-    ii. Configure source with Amazon ECR, browse and choose image URI as the one you just pushed (`actix` here)
+    ii. Configure source with Amazon ECR, browse and choose image URI as the one you just pushed (`actix-translator` here)
     
     iii. Create our use role `AppRunnerECRAccessRole`
     
