@@ -7,18 +7,18 @@ rust-version:
 	clippy-driver --version		#rust linter
 
 format:
-	cargo fmt --quiet
+	cd actix-translator && cargo fmt --quiet
 
 lint:
-	cargo clippy --quiet
+	cd actix-translator && cargo clippy --quiet
 
 test:
-	cargo test --quiet
+	cd actix-translator && cargo test --quiet
 
 run:
-	cargo run
+	cd actix-translator && cargo run
 
 release:
-	cargo build --release
+	cd actix-translator && cargo build --release
 
 all: format lint test run
