@@ -42,7 +42,7 @@ Deployed on:
 9. If `EXTERNAL-IP` is still pending, run: `minikube tunnel` in seperate terminal. `EXTERNAL-IP` will showup immediately
     See * [kubernetes-external-ip-pending](https://makeoptim.com/service-mesh/kubernetes-external-ip-pending/)
     
-9.  Forward the port from 8000 (after :) to localhost:8080 (after :): `kubectl port-forward service/rust-bert-rocket-web-app 8080:8000`
+9.  Forward the port from 8000 (after ":") to localhost:8080 (before ":"): `kubectl port-forward service/rust-bert-rocket-web-app 8080:8000`
 ![Proof of minikube success in browser](assets/minikube_success.png)
 ![Proof of minikube success in browser to translate](assets/minikube_success_translate.png)
 ![Proof of minikube success in browser translated](assets/minikube_success_translated.png)
