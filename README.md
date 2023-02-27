@@ -1,4 +1,4 @@
-# Mini Project week4: Actix containerized calculator
+# Project2: Rocket Web App built on rust-bert translation models
 Deployed on: 
 
 ## Containerization
@@ -55,8 +55,7 @@ kubectl delete deployment rust-bert-rocket-web-app
 minikube stop
 ````
 
-
-## Deployment
+## Deployment in Cloud
 1. In AWS Elastic Container Registry (ECR), create new container repository `actix-translator`
 2. Build docker for our own app: `make build`
 3. Check docker can run: `make rundocker`
