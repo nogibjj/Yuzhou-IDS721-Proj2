@@ -46,5 +46,7 @@ Deployed on: https://eeixxfhm34.us-east-1.awsapprunner.com/translate
     iv. Create and Deploy, done!!!
     
     
-
-
+## References
+# [install-docker-debian](https://docs.docker.com/engine/install/debian/)
+* [rust-cli-template](https://github.com/kbknapp/rust-cli-template)
+* [rust-bert-translate](https://docs.rs/rust-bert/latest/rust_bert/index.html)

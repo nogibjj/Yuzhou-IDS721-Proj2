@@ -42,6 +42,8 @@ async fn index() -> Template {
 #[post("/translate", data = "<form>")]
 async fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template) {
     let translation_model = lib::init_translation_model();
+    let sanity_check = translation_model.translate(&["Hello world"], None, Language::Spanish).unwrap();
+    println!("sanity check: {:#?}", sanity_check);
 
     let template = match form.value {
         Some(ref submission) => {

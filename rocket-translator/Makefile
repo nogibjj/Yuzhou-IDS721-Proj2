@@ -14,7 +14,7 @@ build:
 	docker build -t rust-bert-rocket .
 
 rundocker:
-	docker run -p 8080:8080 rust-bert-rocket
+	docker run -p 8000:8000 rust-bert-rocket
 
 format:
 	cargo fmt --quiet
