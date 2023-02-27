@@ -5,7 +5,7 @@ Deployed on:
 1. In [Dockerfile](https://github.com/nogibjj/Yuzhou-IDS721-Proj2/blob/main/actix-translator/Dockerfile), configure containerization
 2. Build docker with `docker build -t rust-bert-rocket .`
 3. Test docker containerized app with `docker run -p 8000:8000 rust-bert-rocket`
-
+![Proof of docker success in browser](assets/docker_success8000.png)
 ## Deployment on Kubernetes
 
 0. Prerequisite: make sure you have `docker`, `minikube` installed in machine
