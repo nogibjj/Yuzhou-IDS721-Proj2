@@ -6,7 +6,7 @@ rust-version:
 	rustup --version			#rust toolchain manager
 	clippy-driver --version		#rust linter
 
-format:
+format-check:
 	cd actix-translator && cargo fmt --quiet
 
 lint:
@@ -18,7 +18,7 @@ test:
 run:
 	cd actix-translator && cargo run
 
-release:
+build-release:
 	cd actix-translator && cargo build --release
 
 all: format lint test run
